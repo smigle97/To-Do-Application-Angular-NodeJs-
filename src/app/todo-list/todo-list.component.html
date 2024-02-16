@@ -1,0 +1,38 @@
+<div class="container">
+    <h1>To-Do Application</h1>
+    <hr>
+    <form (ngSubmit)="onSubmit(taskForm)" #taskForm="ngForm">
+        <div class="form-group">
+            <label for="task">Task</label>
+            <input type="text" class="form-control" id="task" aria-describedby="TaskHelp" placeholder="Enter task"
+                ngModel name="task" required>
+            <small *ngIf="taskForm.invalid && taskForm.dirty" id="errorMessage" class="form-text text-danger">Required
+                Field</small>
+        </div>
+        <button [disabled]="taskForm.invalid" id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <hr>
+    <table *ngIf="tasksArray.length>0" class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Task</th>
+                <th scope="col">Completed</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let t of tasksArray; let i = index">
+                <th scope="row">{{i+1}}</th>
+                <td>{{t.taskName}}</td>
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="completedflexSwitchCheck"
+                            aria-label="Checkbox for task completation" [checked]="t.isCompleted" (change)="onCheck(i)">
+                    </div>
+                </td>
+                <td><button class="btn btn-danger btn-sm" (click)="onDelete(i)">Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

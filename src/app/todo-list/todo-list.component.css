@@ -1,0 +1,26 @@
+.container {
+    margin-top: 2%;
+}
+
+
+.table {
+    text-align: center;
+}
+
+.form-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Change the color of the checked box to green */
+.form-check-input:checked {
+    background-color: #28a745;
+    /* Change this to your desired green color */
+    border-color: #28a745;
+    /* Change this to your desired green color */
+}
+
+#submitButton {
+    margin-top: 20px;
+}
