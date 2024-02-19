@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, switchMap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -15,17 +16,16 @@ export class TodoListComponent implements OnInit {
   private saveTrigger$ = new Subject<void>();
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) {
 
   }
 
   ngOnInit(): void {
     this.loadTasks();
-
     // Auto-save changes after a brief delay of user inactivity
     this.saveTrigger$
       .pipe(
-        debounceTime(5000), // Adjust the debounce time as needed
+        debounceTime(3000), 
         switchMap(async () => this.saveTasks())
       )
       .subscribe();
@@ -57,24 +57,10 @@ export class TodoListComponent implements OnInit {
     this.saveTrigger$.next();
   }
 
-  /*   loadTasks() {
-      this.http.get<{ taskName: string, isCompleted: boolean }[]>('http://localhost:3000/tasks').subscribe(
-        (data) => {
-          this.tasksArray = data;
-          //this.tasksArray.forEach(task => task.isCompleted = !!task.isCompleted);
-          console.log(this.tasksArray);
-        },
-        (error) => {
-          console.error('Error loading tasks', error);
-        }
-      );
-    } */
-
   loadTasks() {
     this.http.get<{ taskName: string, isCompleted: boolean }[]>('http://localhost:3000/tasks').subscribe({
       next: (data) => {
         this.tasksArray = data;
-        //this.tasksArray.forEach(task => task.isCompleted = !!task.isCompleted);
         console.log(this.tasksArray);
       },
       error: (e) => console.error('Error loading tasks', e),
@@ -86,7 +72,13 @@ export class TodoListComponent implements OnInit {
     this.http.put('http://localhost:3000/tasks', this.tasksArray).subscribe(
       {
         error: (e) => console.error('Error loading tasks', e),
-        complete: () => console.log('Tasks saved successfully')
+        complete: () => {
+          console.log('Tasks saved successfully');
+          this.snackBar.open('Tasks saved successfully!', 'Close', {
+            duration: 2000,
+          });
+        }
       });
   }
+
 }
